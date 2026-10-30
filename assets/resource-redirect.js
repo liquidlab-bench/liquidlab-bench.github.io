@@ -1,7 +1,7 @@
-// QR codes always point to /code/ or /paper/. Only redirects.json changes at release.
+// Resource links stay permanent. Only redirects.json changes at release.
 (async () => {
   const resource = document.body.dataset.resource;
-  if (resource !== "code" && resource !== "paper") return;
+  if (!["code", "paper", "dataset"].includes(resource)) return;
 
   try {
     const response = await fetch("/redirects.json", { cache: "no-store" });
@@ -17,7 +17,7 @@
       throw new Error("Resource destination must be a public HTTPS URL");
     }
     if (target.origin === window.location.origin &&
-        /^\/(?:code|paper)(?:\/|\/index\.html)?$/.test(target.pathname)) {
+        /^\/(?:code|paper|dataset)(?:\/|\/index\.html)?$/.test(target.pathname)) {
       throw new Error("Resource destination must not form a redirect loop");
     }
 
